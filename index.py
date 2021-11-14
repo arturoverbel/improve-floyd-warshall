@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import collections
 import time
 import statistics
+import sys
+from datetime import datetime
 
 from algorithms import floyd_warshall_original
 from algorithms import floyd_warshall_improved
@@ -56,9 +58,7 @@ def printDist(dist):
         dd = dict(collections.OrderedDict(sorted(dist[i].items())))
         print(i.ljust(3), list(dd.values()))
 
-def calculateTimeFunction(G, name="", epoc=1, func=floyd_warshall):
-
-    print(name, "------")
+def calculateTimeFunction(G, epoc=1, func=floyd_warshall):
     timeCalculatedes = []
     for trying in range(epoc):
         
@@ -69,41 +69,71 @@ def calculateTimeFunction(G, name="", epoc=1, func=floyd_warshall):
         timeCalculatedes.append(timeCalculated)
 
     timeResult = statistics.mean(timeCalculatedes)
-    print("Time: ", timeResult, "(ms)")
-
+    
     return timeResult
 
+def testing():
+    G = graphSmall()
+    print(".................... Calculate Floyd-Warshall .......................")
 
-G = graphSmall()
-print(".................... Calculate Floyd-Warshall .......................")
+    dist = floyd_warshall_original(G)
+    printDist(dist)
 
-dist = floyd_warshall_original(G)
-printDist(dist)
+    print(".................... Calculate Floyd-Warshall with Library.......................")
 
-print(".................... Calculate Floyd-Warshall with Library.......................")
-
-dist2 = floyd_warshall(G)
-printDist(dist2)
-
-
-print("\n\n\n\n")
-print(".................... Tesgint Time .......................")
+    dist2 = floyd_warshall(G)
+    printDist(dist2)
 
 
+exp = "test" if len(sys.argv) <= 1 else sys.argv[1]
+epoc = 10 if len(sys.argv) <= 2 else sys.argv[2]
 
-epoc = 500
-experiments = [
-    {"nodes": 500, "density": 1.0},
-    {"nodes": 500, "density": 0.7},
-    {"nodes": 500, "density": 0.4},
-    {"nodes": 1000, "density": 1.0},
-    {"nodes": 1000, "density": 0.7},
-    {"nodes": 1000, "density": 0.4}
-]
+experiments = {
+    "hard": [
+        {"nodes": 500, "density": 1.0},
+        {"nodes": 500, "density": 0.7},
+        {"nodes": 500, "density": 0.4},
+        {"nodes": 1000, "density": 1.0},
+        {"nodes": 1000, "density": 0.7},
+        {"nodes": 1000, "density": 0.4}
+    ],
+    "easy": [
+        {"nodes": 50, "density": 1.0},
+        {"nodes": 50, "density": 0.7},
+        {"nodes": 50, "density": 0.4}
+    ]
+}
 
-for exp in experiments:
+if exp == "test":
+    testing()
+    exit()
+
+resultString = "\n START " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+resultString += "\n*************************************\n";
+for exp in experiments[exp]:
     G = createGraph(exp["nodes"], exp["density"])
+    resultString += "\n-----------------------------------------------"
+    resultString += "\ngraph: [nodes=" + str(exp["nodes"]) + ", density=" + str(exp["density"]) + ", epoc=" + str(epoc) + "]"
 
-    calculateTimeFunction(G, name="FW_original", epoc=epoc, func=floyd_warshall_original)
-    calculateTimeFunction(G, name="FW_library", epoc=epoc, func=floyd_warshall)
-    calculateTimeFunction(G, name="FW_improved", epoc=epoc, func=floyd_warshall_improved)
+    resultString += "\n\nFW_original ------"
+    timeResult = calculateTimeFunction(G, epoc=epoc, func=floyd_warshall_original)
+    resultString += "\nTime: " + str(timeResult) + "(ms)"
+    
+    resultString += "\n[" + datetime.now().strftime("%d/%m/%Y, %H:%M:%S" + "]")
+
+    resultString += "\n\nFW_library ------"
+    timeResult = calculateTimeFunction(G, epoc=epoc, func=floyd_warshall)
+    resultString += "\nTime: " + str(timeResult) + "(ms)"
+    resultString += "\n[" + datetime.now().strftime("%d/%m/%Y, %H:%M:%S" + "]")
+    
+    resultString += "\n\nFW_improved ------"
+    timeResult = calculateTimeFunction(G, epoc=epoc, func=floyd_warshall_improved)
+    resultString += "\nTime: " + str(timeResult) + "(ms)"
+    resultString += "\n[" + datetime.now().strftime("%d/%m/%Y, %H:%M:%S" + "]")
+
+resultString += "\n*************************************";
+resultString += "\n DONE " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+
+f = open("log.txt", "w")
+f.write(resultString)
+f.close()
