@@ -86,7 +86,7 @@ def testing():
 
 
 exp = "test" if len(sys.argv) <= 1 else sys.argv[1]
-epoc = 10 if len(sys.argv) <= 2 else sys.argv[2]
+epoc = 10 if len(sys.argv) <= 2 else int(sys.argv[2])
 
 experiments = {
     "hard": [
