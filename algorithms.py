@@ -2,8 +2,10 @@ import numpy as np
 from collections import defaultdict
 
 def floyd_warshall_original(G):
-    #dist = np.full((len(G.nodes), len(G.nodes)), np.inf)
     dist = defaultdict(lambda: defaultdict(lambda: np.inf))
+
+    for u in G:
+        dist[u][u] = 0
 
     for u, v, d in G.edges(data=True):
         w = 1
@@ -15,8 +17,6 @@ def floyd_warshall_original(G):
 
     for k in G:
         for i in G:
-            if k == i:
-                dist[k][i] = 0
             for j in G:
                 distance = dist[i][k] + dist[k][j]
                 if dist[i][j] > distance:
