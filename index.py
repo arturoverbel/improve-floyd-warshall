@@ -55,7 +55,7 @@ def graphSmall():
     print('Edges of graph: ')
     print(graph.edges())
 
-    printGraph(graph)
+    #printGraph(graph)
 
     return graph
 
@@ -92,6 +92,11 @@ def testing():
 
     dist2 = floyd_warshall(G)
     printDist(dist2)
+
+    print(".................... Calculate Floyd-Warshall Improved.......................")
+
+    dist3 = floyd_warshall_improved(G)
+    printDist(dist3)
 
 
 exp = "test" if len(sys.argv) <= 1 else sys.argv[1]
