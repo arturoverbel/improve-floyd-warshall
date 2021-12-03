@@ -59,9 +59,14 @@ def floyd_warshall_improved(G):
     return dist
 
 
-"""
 def floyd_warshall_best_improved(G):
     dist = defaultdict(lambda: defaultdict(lambda: np.inf))
+    N = G.number_of_nodes()
+
+    ## Vars for select the best
+    select_k = defaultdict(lambda: 0)
+    inc = defaultdict(lambda: 0)
+    outc = defaultdict(lambda: 0)
 
     for u, v, d in G.edges(data=True):
         w = 1
@@ -74,35 +79,41 @@ def floyd_warshall_best_improved(G):
     array_out = defaultdict(lambda: [])
     array_in = defaultdict(lambda: [])
 
+
     for i in G:
         for j in G:
             if i == j:
                 dist[i][j] = 0
                 continue
-            if dist[i, j] != np.inf:
+            if dist[i][j] != np.inf:
+                inc[j] += 1
+                outc[i] += 1
+
                 array_out[i].append(j)
                 array_in[j].append(i)
+
+    
 
     for kk in G:
 
         mink = -1
-        N = G.number_of_nodes()
-        mininxout = 2 * N * N;
-        for k in range(N):
-            if (select_k[k]==0) &&(inc[k]*outc[k]<mininxout))
-        {
-        mink=k;
-        mininxout=inc[k]*outc[k];
-        }
-        }
-        k=mink; // "best" k
-        select_k[k]=1; // remove selected vertex
+        
+        mininxout = 2*N*N
+        for k in G:
+            if (select_k[k] == 0) and (inc[k]*outc[k] < mininxout):
+                mink=k
+                mininxout = inc[k] * outc[k]
+        
+        k=mink; #"best" k
+        select_k[k] = 1;
 
 
         for i in array_in[k]:
             for j in array_out[k]:
                 distance = dist[i][k] + dist[k][j]
                 if dist[i][j] > distance:
+                    if dist[i][j] == np.inf:
+                        array_out[i].append(j)
+                        array_in[j].append(i)
                     dist[i][j] = distance
     return dist
-"""

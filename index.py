@@ -8,6 +8,7 @@ from datetime import datetime
 
 from algorithms import floyd_warshall_original
 from algorithms import floyd_warshall_improved
+from algorithms import floyd_warshall_best_improved
 
 from networkx.algorithms.shortest_paths.dense import floyd_warshall
 
@@ -85,6 +86,7 @@ def testing():
     G = graphSmall()
     print(".................... Calculate Floyd-Warshall .......................")
 
+
     dist = floyd_warshall_original(G)
     printDist(dist)
 
@@ -98,6 +100,11 @@ def testing():
     dist3 = floyd_warshall_improved(G)
     printDist(dist3)
 
+    print(".................... Calculate Floyd-Warshall Improved Best K .......................")
+
+    dist4 = floyd_warshall_best_improved(G)
+    printDist(dist4)
+
 
 exp = "test" if len(sys.argv) <= 1 else sys.argv[1]
 epoc = 10 if len(sys.argv) <= 2 else int(sys.argv[2])
@@ -110,6 +117,11 @@ experiments = {
         {"nodes": 1000, "density": 1.0},
         {"nodes": 1000, "density": 0.7},
         {"nodes": 1000, "density": 0.4}
+    ],
+    "medium": [
+        {"nodes": 100, "density": 1.0},
+        {"nodes": 100, "density": 0.7},
+        {"nodes": 100, "density": 0.4}
     ],
     "easy": [
         {"nodes": 50, "density": 1.0},
@@ -127,7 +139,10 @@ resultString += "\n*************************************\n";
 for exp in experiments[exp]:
     G = createGraph(exp["nodes"], exp["density"])
     resultString += "\n-----------------------------------------------"
-    resultString += "\ngraph: [nodes=" + str(exp["nodes"]) + ", density=" + str(exp["density"]) + ", epoc=" + str(epoc) + "]"
+    logInfoGraph = "\ngraph: [nodes=" + str(exp["nodes"]) + ", density=" + str(exp["density"]) + ", epoc=" + str(epoc) + "]"
+    print(logInfoGraph)
+    print("Loading ... ")
+    resultString += logInfoGraph
 
     resultString += "\n\nFW_original ------"
     timeResult = calculateTimeFunction(G, epoc=epoc, func=floyd_warshall_original)
@@ -145,8 +160,14 @@ for exp in experiments[exp]:
     resultString += "\nTime: " + str(timeResult) + "(ms)"
     resultString += "\n[" + datetime.now().strftime("%d/%m/%Y, %H:%M:%S" + "]")
 
+    resultString += "\n\nFW improved best K ------"
+    timeResult = calculateTimeFunction(G, epoc=epoc, func=floyd_warshall_best_improved)
+    resultString += "\nTime: " + str(timeResult) + "(ms)"
+    resultString += "\n[" + datetime.now().strftime("%d/%m/%Y, %H:%M:%S" + "]")
+
 resultString += "\n*************************************";
 resultString += "\n DONE " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+print("\nDONE")
 
 f = open("log.txt", "w")
 f.write(resultString)
