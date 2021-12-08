@@ -13,7 +13,8 @@ def floyd_warshall_original(G):
             w = d.get('weight')
 
         dist[u][v] = w
-        dist[v][u] = w
+        if(G.has_edge(v, u)):
+            dist[v][u] = w
 
     for k in G:
         for i in G:
@@ -33,7 +34,8 @@ def floyd_warshall_improved(G):
             w = d.get('weight')
             
         dist[u][v] = w
-        dist[v][u] = w
+        if(G.has_edge(v, u)):
+            dist[v][u] = w
     
     array_out = defaultdict(lambda: [])
     array_in = defaultdict(lambda: [])
@@ -74,7 +76,8 @@ def floyd_warshall_best_improved(G):
             w = d.get('weight')
             
         dist[u][v] = w
-        dist[v][u] = w
+        if(G.has_edge(v, u)):
+            dist[v][u] = w
     
     array_out = defaultdict(lambda: [])
     array_in = defaultdict(lambda: [])
@@ -97,7 +100,6 @@ def floyd_warshall_best_improved(G):
     for kk in G:
 
         mink = -1
-        
         mininxout = 2*N*N
         for k in G:
             if (select_k[k] == 0) and (inc[k]*outc[k] < mininxout):

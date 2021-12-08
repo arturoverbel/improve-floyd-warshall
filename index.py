@@ -12,6 +12,9 @@ from algorithms import floyd_warshall_best_improved
 
 from networkx.algorithms.shortest_paths.dense import floyd_warshall
 
+def getNow():
+    return datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+
 def printGraph(G):
     pos = nx.spring_layout(G)
     list_edges = list(G.edges())
@@ -42,7 +45,7 @@ def createGraph(nodes=100, density=0.5):
     return nx.gnm_random_graph(nodes, edges)
 
 def graphSmall():
-    graph = nx.Graph()
+    graph = nx.DiGraph()
 
     graph.add_edge('a', 'tt', weight=3)
     graph.add_edge('a', 'b', weight=4)
@@ -57,6 +60,36 @@ def graphSmall():
     print(graph.edges())
 
     #printGraph(graph)
+
+    return graph
+
+def graphExample():
+    graph = nx.DiGraph()
+
+    graph.add_edge('1', '2', weight=2)
+    graph.add_edge('1', '4', weight=5)
+    
+    graph.add_edge('2', '1', weight=6)
+    graph.add_edge('2', '3', weight=3)
+    graph.add_edge('2', '4', weight=-1)
+    graph.add_edge('2', '5', weight=2)
+
+    graph.add_edge('3', '4', weight=2)
+    graph.add_edge('3', '5', weight=-2)
+
+    graph.add_edge('4', '1', weight=-1)
+    graph.add_edge('4', '2', weight=1)
+    graph.add_edge('4', '3', weight=2)
+    graph.add_edge('4', '5', weight=-1)
+    
+    graph.add_edge('5', '1', weight=1)
+
+    print('Nodes of graph: ')
+    print(graph.nodes())
+    print('Edges of graph: ')
+    print(graph.edges())
+
+    printGraph(graph)
 
     return graph
 
@@ -83,7 +116,7 @@ def calculateTimeFunction(G, epoc=1, func=floyd_warshall):
     return timeResult
 
 def testing():
-    G = graphSmall()
+    G = graphExample()
     print(".................... Calculate Floyd-Warshall .......................")
 
 
@@ -134,7 +167,11 @@ if exp == "test":
     testing()
     exit()
 
-resultString = "\n START " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+f = open("status.txt", "w")
+f.write("[" + getNow() + "] Running...")
+f.close()
+
+resultString = "\n START " + getNow()
 resultString += "\n*************************************\n";
 for exp in experiments[exp]:
     G = createGraph(exp["nodes"], exp["density"])
@@ -148,27 +185,32 @@ for exp in experiments[exp]:
     timeResult = calculateTimeFunction(G, epoc=epoc, func=floyd_warshall_original)
     resultString += "\nTime: " + str(timeResult) + "(ms)"
     
-    resultString += "\n[" + datetime.now().strftime("%d/%m/%Y, %H:%M:%S" + "]")
+    resultString += "\n[" + getNow() + "]"
 
     resultString += "\n\nFW_library ------"
     timeResult = calculateTimeFunction(G, epoc=epoc, func=floyd_warshall)
     resultString += "\nTime: " + str(timeResult) + "(ms)"
-    resultString += "\n[" + datetime.now().strftime("%d/%m/%Y, %H:%M:%S" + "]")
+    resultString += "\n[" + getNow() + "]"
     
     resultString += "\n\nFW_improved ------"
     timeResult = calculateTimeFunction(G, epoc=epoc, func=floyd_warshall_improved)
     resultString += "\nTime: " + str(timeResult) + "(ms)"
-    resultString += "\n[" + datetime.now().strftime("%d/%m/%Y, %H:%M:%S" + "]")
+    resultString += "\n[" + getNow() + "]"
 
     resultString += "\n\nFW improved best K ------"
     timeResult = calculateTimeFunction(G, epoc=epoc, func=floyd_warshall_best_improved)
     resultString += "\nTime: " + str(timeResult) + "(ms)"
-    resultString += "\n[" + datetime.now().strftime("%d/%m/%Y, %H:%M:%S" + "]")
+
+    resultString += "\n[" + getNow() + "]"
 
 resultString += "\n*************************************";
-resultString += "\n DONE " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+resultString += "\n DONE " + getNow()
 print("\nDONE")
 
 f = open("log.txt", "w")
 f.write(resultString)
+f.close()
+
+f = open("status.txt", "a")
+f.write("\n[" + getNow() + "] DONE!")
 f.close()
