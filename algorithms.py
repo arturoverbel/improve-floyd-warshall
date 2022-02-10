@@ -1,5 +1,6 @@
 import numpy as np
 from collections import defaultdict
+from utils import print_dist
 
 def floyd_warshall_original(G):
     dist = defaultdict(lambda: defaultdict(lambda: np.inf))
@@ -13,8 +14,6 @@ def floyd_warshall_original(G):
             w = d.get('weight')
 
         dist[u][v] = w
-        if(G.has_edge(v, u)):
-            dist[v][u] = w
 
     for k in G:
         for i in G:
@@ -34,8 +33,6 @@ def floyd_warshall_improved(G):
             w = d.get('weight')
             
         dist[u][v] = w
-        if(G.has_edge(v, u)):
-            dist[v][u] = w
     
     array_out = defaultdict(lambda: [])
     array_in = defaultdict(lambda: [])
@@ -76,8 +73,6 @@ def floyd_warshall_best_improved(G):
             w = d.get('weight')
             
         dist[u][v] = w
-        if(G.has_edge(v, u)):
-            dist[v][u] = w
     
     array_out = defaultdict(lambda: [])
     array_in = defaultdict(lambda: [])

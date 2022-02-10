@@ -9,6 +9,7 @@ from datetime import datetime
 from algorithms import floyd_warshall_original
 from algorithms import floyd_warshall_improved
 from algorithms import floyd_warshall_best_improved
+from utils import print_dist
 
 from networkx.algorithms.shortest_paths.dense import floyd_warshall
 
@@ -71,16 +72,16 @@ def graphExample():
     
     graph.add_edge('2', '1', weight=6)
     graph.add_edge('2', '3', weight=3)
-    graph.add_edge('2', '4', weight=-1)
+    graph.add_edge('2', '4', weight=1)
     graph.add_edge('2', '5', weight=2)
 
     graph.add_edge('3', '4', weight=2)
-    graph.add_edge('3', '5', weight=-2)
+    graph.add_edge('3', '5', weight=2)
 
-    graph.add_edge('4', '1', weight=-1)
+    graph.add_edge('4', '1', weight=1)
     graph.add_edge('4', '2', weight=1)
     graph.add_edge('4', '3', weight=2)
-    graph.add_edge('4', '5', weight=-1)
+    graph.add_edge('4', '5', weight=1)
     
     graph.add_edge('5', '1', weight=1)
 
@@ -89,17 +90,9 @@ def graphExample():
     print('Edges of graph: ')
     print(graph.edges())
 
-    printGraph(graph)
+    #printGraph(graph)
 
     return graph
-
-def printDist(dist):
-    keys = dist.keys()
-    for i in dist:
-        dd = dict(dist[i].items())
-        arrayToPrint = []
-        for k in keys: arrayToPrint.append(dd[k])
-        print(i.ljust(3), arrayToPrint)
 
 def calculateTimeFunction(G, epoc=1, func=floyd_warshall):
     timeCalculatedes = []
@@ -121,22 +114,22 @@ def testing():
 
 
     dist = floyd_warshall_original(G)
-    printDist(dist)
+    print_dist(dist)
 
     print(".................... Calculate Floyd-Warshall with Library.......................")
 
     dist2 = floyd_warshall(G)
-    printDist(dist2)
+    print_dist(dist2)
 
     print(".................... Calculate Floyd-Warshall Improved.......................")
 
     dist3 = floyd_warshall_improved(G)
-    printDist(dist3)
+    print_dist(dist3)
 
     print(".................... Calculate Floyd-Warshall Improved Best K .......................")
 
     dist4 = floyd_warshall_best_improved(G)
-    printDist(dist4)
+    print_dist(dist4)
 
 
 exp = "test" if len(sys.argv) <= 1 else sys.argv[1]
